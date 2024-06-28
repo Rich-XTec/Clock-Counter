@@ -1,0 +1,50 @@
+module top
+(
+	clk_i,
+	rst_i,
+	load_i,
+	sw_i,
+	led_one_second_o,
+	unit_second_o,
+	decimal_second_o
+);
+
+localparam N = 7;
+localparam Z = 4;
+
+input wire 			clk_i;
+input wire 			rst_i;
+input wire 			load_i;
+input wire  [N-1:0]	sw_i;
+output wire 		led_one_second_o;
+output wire [N-1:0] unit_second_o;
+output wire [N-1:0] decimal_second_o;
+
+wire [Z-1:0] w_unit_second;
+wire [Z-1:0] w_decimal_second;
+
+
+digital_clock U00
+(
+	.clk_i       	  (clk_i), 
+	.rst_i       	  (rst_i),
+	.one_second_o	  (led_one_second_o), // LED
+	.unit_seconds_o   (w_unit_second),
+	.decimal_seconds_o(w_decimal_second)
+);
+
+// UNIT
+dec7seg U01
+(
+    .bcd_i  (w_unit_second),
+    .seg_o  (unit_second_o)
+);
+
+// DECIMAL
+dec7seg U02
+(
+    .bcd_i  (w_decimal_second),
+    .seg_o  (decimal_second_o)
+);
+
+endmodule
